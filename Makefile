@@ -34,8 +34,9 @@ tauri: sidecars ## Run the native Tauri window (WSLg / X11)
 tauri-build: sidecars ## Build Linux bundles (deb, rpm, AppImage) into target/release/bundle
 	$(RUN) pnpm tauri build
 
-build-windows: ## Windows installer (.exe, NSIS) via cargo-xwin → target/x86_64-pc-windows-msvc/release/bundle/nsis
+build-windows: ## Windows installer (.exe, NSIS) via cargo-xwin, copied into release/
 	$(RUN) bash -c 'node scripts/fetch-sidecars.mjs x86_64-pc-windows-msvc && pnpm build:windows'
+	mkdir -p release && cp target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe release/
 
 lint: ## Biome lint + format check
 	$(RUN) pnpm lint

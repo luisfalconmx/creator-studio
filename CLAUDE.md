@@ -11,6 +11,9 @@ monorepo with a Cargo workspace.
   `docker compose run --rm dev <cmd>` (e.g. `docker compose run --rm dev pnpm --filter @creator-studio/images add zod`).
 - Package manager is **pnpm** only. Tasks run through **turbo** (`pnpm typecheck`, `pnpm test`, `pnpm build`).
 - Commits follow Conventional Commits; scopes are listed in `commitlint.config.ts`.
+- **Every `.exe` you build must end up in `release/`** (repo root, git-ignored). `make build-windows`
+  copies the NSIS installer there; if you build another way, copy
+  `target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe` into `release/` yourself.
 - Before finishing a change run `make lint typecheck test` (and `make e2e` / `make cargo-lint cargo-test` when relevant).
 - UI text is in **Spanish**. The look & feel is ClipStudio's: dark, red `#E7000B` accent, glass panels,
   Inter, `@gravity-ui/icons`. Reuse `@creator-studio/ui` (`AppHeader`, `Panel`, `DropZone`, `PageBackdrop`…).
