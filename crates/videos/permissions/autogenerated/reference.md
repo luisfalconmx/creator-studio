@@ -33,6 +33,7 @@ Todos los comandos del editor de video y del gestor de metadata.
 <th>Description</th>
 </tr>
 
+
 <tr>
 <td>
 
