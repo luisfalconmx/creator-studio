@@ -1,0 +1,147 @@
+/* Estilos propios de la sección Videos. */
+
+/* ---------- Mini vista previa de transiciones ---------- */
+.tr-prev .tr-b {
+  animation-duration: 2.6s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+.tr-fade .tr-b {
+  animation-name: tr-fade;
+}
+.tr-wipeleft .tr-b {
+  animation-name: tr-wipeleft;
+}
+.tr-wiperight .tr-b {
+  animation-name: tr-wiperight;
+}
+.tr-slideleft .tr-b {
+  animation-name: tr-slideleft;
+}
+.tr-slideup .tr-b {
+  animation-name: tr-slideup;
+}
+.tr-circle .tr-b {
+  animation-name: tr-circle;
+}
+.tr-radial .tr-b {
+  animation-name: tr-radial;
+}
+.tr-black .tr-b,
+.tr-white .tr-b {
+  animation-name: tr-step;
+}
+.tr-black::after,
+.tr-white::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  animation: tr-dip 2.6s ease-in-out infinite;
+}
+.tr-black::after {
+  background: #000;
+}
+.tr-white::after {
+  background: #fff;
+}
+
+@keyframes tr-fade {
+  0%,
+  20% {
+    opacity: 0;
+  }
+  70%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes tr-step {
+  0%,
+  45% {
+    opacity: 0;
+  }
+  46%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes tr-dip {
+  0%,
+  20% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 1;
+  }
+  70%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes tr-wipeleft {
+  0%,
+  20% {
+    clip-path: inset(0 0 0 100%);
+  }
+  70%,
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes tr-wiperight {
+  0%,
+  20% {
+    clip-path: inset(0 100% 0 0);
+  }
+  70%,
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes tr-slideleft {
+  0%,
+  20% {
+    transform: translateX(100%);
+  }
+  70%,
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes tr-slideup {
+  0%,
+  20% {
+    transform: translateY(100%);
+  }
+  70%,
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes tr-circle {
+  0%,
+  20% {
+    clip-path: circle(0% at 50% 50%);
+  }
+  70%,
+  100% {
+    clip-path: circle(75% at 50% 50%);
+  }
+}
+@keyframes tr-radial {
+  0%,
+  20% {
+    clip-path: circle(0% at 0% 0%);
+  }
+  70%,
+  100% {
+    clip-path: circle(145% at 0% 0%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tr-prev .tr-b,
+  .tr-prev::after {
+    animation: none;
+  }
+}

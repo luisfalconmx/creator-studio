@@ -1,0 +1,19 @@
+[package]
+name = "tauri-plugin-images"
+description = "Creator Studio: guarda las imágenes optimizadas en disco"
+links = "tauri-plugin-images"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+tauri.workspace = true
+percent-encoding = "2"
+serde.workspace = true
+serde_json.workspace = true
+
+[build-dependencies]
+tauri-plugin.workspace = true

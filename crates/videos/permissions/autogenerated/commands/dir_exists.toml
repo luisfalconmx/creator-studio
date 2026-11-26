@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-dir-exists"
+description = "Enables the dir_exists command without any pre-configured scope."
+commands.allow = ["dir_exists"]
+
+[[permission]]
+identifier = "deny-dir-exists"
+description = "Denies the dir_exists command without any pre-configured scope."
+commands.deny = ["dir_exists"]

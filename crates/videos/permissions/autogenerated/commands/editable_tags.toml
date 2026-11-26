@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-editable-tags"
+description = "Enables the editable_tags command without any pre-configured scope."
+commands.allow = ["editable_tags"]
+
+[[permission]]
+identifier = "deny-editable-tags"
+description = "Denies the editable_tags command without any pre-configured scope."
+commands.deny = ["editable_tags"]

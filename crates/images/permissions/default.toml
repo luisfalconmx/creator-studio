@@ -1,0 +1,7 @@
+"$schema" = "schemas/schema.json"
+
+[default]
+description = "Guardar las imágenes optimizadas."
+permissions = [
+  "allow-save-output",
+]

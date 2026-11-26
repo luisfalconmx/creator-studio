@@ -1,0 +1,4 @@
+{
+  "*.{js,jsx,ts,tsx,mjs,cjs,json,jsonc,css}": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true",
+  "*.rs": "bash -c 'cargo fmt --all'"
+}

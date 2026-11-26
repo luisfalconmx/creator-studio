@@ -1,0 +1,17 @@
+"$schema" = "schemas/schema.json"
+
+[default]
+description = "Todos los comandos del descargador (yt-dlp)."
+permissions = [
+  "allow-fetch-info",
+  "allow-scrape-page",
+  "allow-probe-media",
+  "allow-probe-sizes",
+  "allow-start-download",
+  "allow-cancel-download",
+  "allow-default-download-dir",
+  "allow-tool-versions",
+  "allow-update-ytdlp",
+  "allow-reveal-file",
+  "allow-open-file",
+]

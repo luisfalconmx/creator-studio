@@ -1,0 +1,8 @@
+/* Estilos propios de la sección Descargas: las tarjetas de HeroUI usan el vidrio de Creator Studio. */
+
+[data-section="downloads"] .card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 20px 60px -30px rgba(0, 0, 0, 0.8);
+}

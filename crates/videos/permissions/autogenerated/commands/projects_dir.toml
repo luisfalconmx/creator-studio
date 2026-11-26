@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-projects-dir"
+description = "Enables the projects_dir command without any pre-configured scope."
+commands.allow = ["projects_dir"]
+
+[[permission]]
+identifier = "deny-projects-dir"
+description = "Denies the projects_dir command without any pre-configured scope."
+commands.deny = ["projects_dir"]

@@ -1,0 +1,26 @@
+"$schema" = "schemas/schema.json"
+
+[default]
+description = "Todos los comandos del editor de video y del gestor de metadata."
+permissions = [
+  "allow-ffmpeg-status",
+  "allow-probe-media",
+  "allow-thumbnail",
+  "allow-capture-frame",
+  "allow-read-cover",
+  "allow-write-metadata",
+  "allow-scan-folder",
+  "allow-editable-tags",
+  "allow-start-render",
+  "allow-cancel-render",
+  "allow-save-text",
+  "allow-load-text",
+  "allow-file-exists",
+  "allow-projects-dir",
+  "allow-new-project-path",
+  "allow-list-projects",
+  "allow-delete-project",
+  "allow-take-startup-paths",
+  "allow-default-export-dir",
+  "allow-dir-exists",
+]

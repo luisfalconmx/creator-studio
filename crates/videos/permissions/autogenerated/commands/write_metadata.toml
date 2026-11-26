@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-write-metadata"
+description = "Enables the write_metadata command without any pre-configured scope."
+commands.allow = ["write_metadata"]
+
+[[permission]]
+identifier = "deny-write-metadata"
+description = "Denies the write_metadata command without any pre-configured scope."
+commands.deny = ["write_metadata"]

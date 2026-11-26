@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+@import "@creator-studio/ui/styles.css";
+@import "@creator-studio/videos/styles.css";
+@import "@creator-studio/images/styles.css";
+@import "@creator-studio/downloads/styles.css";
+
+/* Las clases de Tailwind viven en los paquetes de cada sección. */
+@source "../../../packages/ui/src";
+@source "../../../packages/videos/src";
+@source "../../../packages/images/src";
+@source "../../../packages/downloads/src";
+
+@custom-variant dark (&:where(.dark, .dark *));

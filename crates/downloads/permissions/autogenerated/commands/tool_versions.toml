@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-tool-versions"
+description = "Enables the tool_versions command without any pre-configured scope."
+commands.allow = ["tool_versions"]
+
+[[permission]]
+identifier = "deny-tool-versions"
+description = "Denies the tool_versions command without any pre-configured scope."
+commands.deny = ["tool_versions"]

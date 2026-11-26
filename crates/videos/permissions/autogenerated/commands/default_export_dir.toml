@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-default-export-dir"
+description = "Enables the default_export_dir command without any pre-configured scope."
+commands.allow = ["default_export_dir"]
+
+[[permission]]
+identifier = "deny-default-export-dir"
+description = "Denies the default_export_dir command without any pre-configured scope."
+commands.deny = ["default_export_dir"]

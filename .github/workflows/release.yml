@@ -1,0 +1,108 @@
+name: Release
+
+# Builds the installers for Windows, Linux and macOS, signs their update
+# packages and publishes them (with version-less names and the updater's
+# latest.json) to the GitHub Release. Triggered by pushing a tag like `v1.0.0`.
+# `pnpm release:mac` can still build macOS locally if the macOS runners are
+# not available.
+#
+# Needs the repository secret TAURI_SIGNING_PRIVATE_KEY (contents of
+# ~/.tauri/creator-studio.key) to sign the updates.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows (x64)
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+          - name: Linux (x64)
+            os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+          - name: macOS (Apple Silicon)
+            os: macos-latest
+            target: aarch64-apple-darwin
+          - name: macOS (Intel)
+            os: macos-latest
+            target: x86_64-apple-darwin
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf rpm
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download sidecars (yt-dlp, ffmpeg, ffprobe, deno)
+        run: node scripts/fetch-sidecars.mjs ${{ matrix.target }}
+
+      - name: Build (signed update packages)
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
+        run: pnpm tauri build --target ${{ matrix.target }} --config src-tauri/tauri.release.conf.json
+
+      - name: Rename installers
+        run: node scripts/release-collect.mjs ${{ matrix.target }} release-out
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-${{ matrix.target }}
+          path: release-out
+          if-no-files-found: error
+
+  publish:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - uses: actions/download-artifact@v8
+        with:
+          path: release-out
+          pattern: release-*
+          merge-multiple: true
+
+      - name: Upload installers and latest.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/release-publish.mjs release-out

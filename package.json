@@ -1,0 +1,43 @@
+{
+  "name": "creator-studio",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Creator Studio: suite de escritorio todo en uno para contenido multimedia (videos, imágenes y descargas).",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisfalconmx/creator-studio.git"
+  },
+  "scripts": {
+    "dev": "turbo run dev --filter=@creator-studio/desktop",
+    "build": "turbo run build",
+    "tauri": "pnpm --filter @creator-studio/desktop tauri",
+    "app": "pnpm sidecars && pnpm tauri dev",
+    "build:windows": "pnpm --filter @creator-studio/desktop build:windows",
+    "sidecars": "node scripts/fetch-sidecars.mjs",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:coverage": "turbo run test:coverage",
+    "e2e": "pnpm --filter @creator-studio/desktop e2e",
+    "e2e:prod": "pnpm --filter @creator-studio/desktop e2e:prod",
+    "e2e:install": "pnpm --filter @creator-studio/desktop exec playwright install chromium webkit",
+    "release:mac": "node scripts/release-mac.mjs",
+    "prepare": "husky"
+  },
+  "packageManager": "pnpm@12.23.0+sha512.02da94ffaf133f46074322afe552f90d40b5f71ae259aefbccdacc5085b1d617e98d65e0131f5748b9b67445978ee5055d7d59a473f1eef0d504854fefcd5975",
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.8",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@commitlint/types": "^21.2.3",
+    "@types/node": "^26.6.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.2",
+    "turbo": "^2.11.13",
+    "typescript": "^7.0.2"
+  }
+}

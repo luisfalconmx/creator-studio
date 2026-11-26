@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Creator Studio">
+  <title>Creator Studio</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a0507"/>
+      <stop offset="1" stop-color="#09090b"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff3b45"/>
+      <stop offset="1" stop-color="#b00008"/>
+    </linearGradient>
+  </defs>
+  <rect x="64" y="64" width="896" height="896" rx="210" fill="url(#bg)"/>
+  <rect x="64" y="64" width="896" height="896" rx="210" fill="none" stroke="#e7000b" stroke-opacity=".55" stroke-width="10"/>
+  <!-- "C" de Creator: anillo abierto -->
+  <path d="M712 330 A260 260 0 1 0 712 694" fill="none" stroke="#ffffff" stroke-opacity=".9" stroke-width="64" stroke-linecap="round"/>
+  <!-- play redondeado -->
+  <path d="M452 392 Q428 378 428 406 L428 618 Q428 646 452 632 L626 530 Q650 512 626 494 Z" fill="url(#red)"/>
+  <!-- destello -->
+  <path d="M744 238 L760 284 L806 300 L760 316 L744 362 L728 316 L682 300 L728 284 Z" fill="#ff3b45"/>
+</svg>
