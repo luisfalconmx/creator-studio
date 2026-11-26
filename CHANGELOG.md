@@ -9,6 +9,8 @@ Cada release publica en GitHub la sección de su versión como notas (ver `scrip
 
 ## [Sin publicar]
 
+## [1.1.0] - 2026-11-26
+
 ### Cambiado
 
 - **Imágenes** y **Descargas** estrenan una pantalla de inicio con el mismo estilo que la de Videos:
@@ -45,5 +47,6 @@ escritorio para Windows, macOS y Linux.
   la primera vez, los proyectos de ClipStudio se copian a Creator Studio.
 - Arrastrar archivos a la ventana solo afecta a la sección visible.
 
-[Sin publicar]: https://github.com/luisfalconmx/creator-studio/compare/v1.0.0...HEAD
+[Sin publicar]: https://github.com/luisfalconmx/creator-studio/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/luisfalconmx/creator-studio/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/luisfalconmx/creator-studio/releases/tag/v1.0.0
