@@ -1,7 +1,7 @@
 {
   "name": "@creator-studio/desktop",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Creator Studio: app de escritorio (Tauri) que reúne Videos, Imágenes y Descargas",
   "type": "module",
   "scripts": {

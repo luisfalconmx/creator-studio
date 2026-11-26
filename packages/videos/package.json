@@ -1,7 +1,7 @@
 {
   "name": "@creator-studio/videos",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Sección Videos: editor de video y gestor de metadata (antes ClipStudio)",
   "type": "module",
   "exports": {

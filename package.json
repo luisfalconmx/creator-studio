@@ -1,7 +1,7 @@
 {
   "name": "creator-studio",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Creator Studio: suite de escritorio todo en uno para contenido multimedia (videos, imágenes y descargas).",
   "type": "module",
   "license": "MIT",

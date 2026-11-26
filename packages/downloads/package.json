@@ -1,7 +1,7 @@
 {
   "name": "@creator-studio/downloads",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Sección Descargas: descargador de videos y audio con yt-dlp (antes Streamline)",
   "type": "module",
   "exports": {

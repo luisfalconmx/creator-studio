@@ -1,7 +1,7 @@
 {
   "name": "@creator-studio/images",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Sección Imágenes: optimizador de imágenes con códecs de Squoosh (antes Pixelair)",
   "type": "module",
   "exports": {
