@@ -7,7 +7,7 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { publish, RELEASE_NOTES, readVersion } from './release-lib.mjs'
+import { publish, readVersion, releaseNotes } from './release-lib.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const dir = resolve(process.argv[2] ?? 'release-out')
@@ -23,4 +23,4 @@ const platforms = Object.assign(
     .filter((n) => /platforms-.*\.json$/.test(n))
     .map((n) => JSON.parse(readFileSync(join(dir, n), 'utf8'))),
 )
-publish({ tag: `v${version}`, version, files, platforms, notes: RELEASE_NOTES })
+publish({ tag: `v${version}`, version, files, platforms, notes: releaseNotes(ROOT, version) })

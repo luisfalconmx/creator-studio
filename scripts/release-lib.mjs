@@ -153,7 +153,34 @@ export function readVersion(root) {
 /** Cargo workspace: every crate builds into the root `target/` folder. */
 export const bundleDirFor = (root, target) => join(root, 'target', target, 'release/bundle')
 
-export const RELEASE_NOTES = `## Descargas
+/**
+ * The `## [version]` section of CHANGELOG.md (without its heading). Every release
+ * needs one: this throws when it's missing, so a release can't ship without a changelog.
+ */
+export function changelogFor(root, version) {
+  const text = readFileSync(resolve(root, 'CHANGELOG.md'), 'utf8')
+  const escaped = version.replace(/[.]/g, '\\.')
+  const match = text.match(
+    new RegExp(
+      `^## \\[${escaped}\\][^\\n]*\\n([\\s\\S]*?)(?=^## \\[|^\\[[^\\]]+\\]: |(?![\\s\\S]))`,
+      'm',
+    ),
+  )
+  const body = match?.[1].trim()
+  if (!body) {
+    throw new Error(
+      `CHANGELOG.md no tiene una sección "## [${version}]". Escribe el changelog de esta versión antes de publicarla.`,
+    )
+  }
+  return body
+}
+
+/** GitHub release notes: the version's changelog followed by the download links. */
+export function releaseNotes(root, version) {
+  return `${changelogFor(root, version)}\n\n${DOWNLOADS}`
+}
+
+const DOWNLOADS = `## Descargas
 
 | Sistema | Archivo |
 | --- | --- |

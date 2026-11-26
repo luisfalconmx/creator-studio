@@ -15,10 +15,11 @@ import { existsSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { bundleDirFor, collect, publish, RELEASE_NOTES, readVersion } from './release-lib.mjs'
+import { bundleDirFor, collect, publish, readVersion, releaseNotes } from './release-lib.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const version = readVersion(ROOT)
+releaseNotes(ROOT, version) // fails early when CHANGELOG.md has no entry for this version
 const tag = `v${version}`
 const targets = process.argv.includes('--arm-only')
   ? ['aarch64-apple-darwin']
@@ -58,5 +59,5 @@ for (const target of targets) {
 }
 
 console.log(`\n▶ Subiendo a ${tag}`)
-publish({ tag, version, files, platforms, notes: RELEASE_NOTES })
+publish({ tag, version, files, platforms, notes: releaseNotes(ROOT, version) })
 console.log('Listo.')

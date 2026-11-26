@@ -43,3 +43,19 @@ scripts/                 Sidecars (yt-dlp, ffmpeg, ffprobe, deno) and release sc
   `cargo fmt` + `clippy -D warnings`. App-level permissions go in `apps/desktop/src-tauri/capabilities/default.json`.
 - ffmpeg/ffprobe, yt-dlp and deno are bundled as sidecars (`pnpm sidecars`); both Videos and Downloads
   find them next to the executable.
+
+## Releases and changelog (mandatory)
+
+**Every release must come with a changelog of that version's changes.** Any agent (Claude or other AI)
+preparing a release must:
+
+1. Update `CHANGELOG.md` *before* bumping the version: move the items from `## [Sin publicar]` into a new
+   `## [x.y.z] - YYYY-MM-DD` section (Keep a Changelog, in Spanish, grouped under `### Agregado`,
+   `### Cambiado`, `### Corregido`, `### Eliminado`), written for users, not as a commit list. Build it
+   from `git log vPREV..HEAD` and the diff; update the compare links at the bottom.
+2. Bump the version with `pnpm version x.y.z` (the `version` script syncs `apps/desktop`, `packages/*`,
+   `Cargo.toml` and `Cargo.lock`), commit as `chore(release): vx.y.z`, tag `vx.y.z` and push with tags.
+3. The release notes on GitHub are generated from that `CHANGELOG.md` section
+   (`scripts/release-lib.mjs` → `releaseNotes()`); publishing fails if the section is missing.
+
+While working (not releasing), add notable user-facing changes under `## [Sin publicar]`.
