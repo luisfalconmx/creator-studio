@@ -9,6 +9,13 @@ Cada release publica en GitHub la sección de su versión como notas (ver `scrip
 
 ## [Sin publicar]
 
+### Cambiado
+
+- **Imágenes** y **Descargas** estrenan una pantalla de inicio con el mismo estilo que la de Videos:
+  fondo 3D animado (fotos flotantes en Imágenes, tarjetas de descarga en Descargas), bienvenida
+  grande y tarjetas de acción. En Descargas puedes pegar el enlace del portapapeles, ir a la cola o
+  abrir los ajustes desde el inicio.
+
 ## [1.0.0] - 2026-11-26
 
 Primera versión de Creator Studio: une ClipStudio, Pixelair y Streamline en una sola app de

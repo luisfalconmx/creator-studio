@@ -20,7 +20,9 @@
     "@gravity-ui/icons": "^2.24.0",
     "@heroui/react": "^3.2.8",
     "@heroui/styles": "^3.2.8",
-    "@tauri-apps/api": "^2.12.5"
+    "@tauri-apps/api": "^2.12.5",
+    "motion": "^14.14.0",
+    "three": "^0.187.0"
   },
   "peerDependencies": {
     "react": "^19.3.1",
@@ -40,6 +42,7 @@
     "jsdom": "^31.0.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.8",
-    "vitest": "^5.1.1"
+    "vitest": "^5.1.1",
+    "@types/three": "^0.187.0"
   }
 }

@@ -1,5 +1,7 @@
 export { Choice } from './components/Choice'
 export { ErrorBoundary } from './components/ErrorBoundary'
+export { type HeroMotif, HeroScene } from './components/HeroScene'
+export { ActionCard, HomeBackdrop, HomeFooter, HomeHero, HomeTopBar } from './components/Home'
 export { AppHeader, DropZone, LogoMark, PageBackdrop, Panel } from './components/Shell'
 export { errMsg, formatBytes, inTauri } from './lib'
 export { SectionActiveContext, useSectionActive } from './section'

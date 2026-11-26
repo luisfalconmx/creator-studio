@@ -1,9 +1,11 @@
+import { ActionCard, HomeFooter, HomeHero } from '@creator-studio/ui'
 import {
+  CopyArrowRight as ClipboardPaste,
   ArrowDownToLine as Download,
   Filmstrip as Film,
+  ListUl,
   MusicNote as Music,
-  Sparkles,
-  Thunderbolt as Zap,
+  Sliders,
 } from '@gravity-ui/icons'
 import {
   Alert,
@@ -18,7 +20,7 @@ import {
   toast,
 } from '@heroui/react'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { formatBytes, uid } from '../lib/format'
+import { formatBytes, looksLikeUrl, uid } from '../lib/format'
 import {
   applyPreview,
   bestThumbnail,
@@ -37,6 +39,7 @@ import {
   type PageSource,
   probeMedia,
   probeSizes,
+  readClipboard,
   scrapePage,
 } from '../lib/tauri'
 import type { DownloadItem, MediaMode, Settings, YtInfo } from '../lib/types'
@@ -85,6 +88,7 @@ const SESSION_BROWSERS = [
 
 interface Props {
   onShowDownloads: () => void
+  onShowSettings?: () => void
 }
 
 interface Analysis {
@@ -186,7 +190,7 @@ function withPageDetails(result: Analysis, page: PageInfo | null, target: string
   return result
 }
 
-export function DownloadView({ onShowDownloads }: Props) {
+export function DownloadView({ onShowDownloads, onShowSettings }: Props) {
   const { settings, updateSettings, enqueue } = useStore()
   const [url, setUrl] = useState('')
   /** Link that was analysed (its hostname labels the preview). */
@@ -345,52 +349,88 @@ export function DownloadView({ onShowDownloads }: Props) {
 
   const empty = !info && !loading && !error
 
+  /** Pega el enlace del portapapeles y lo analiza. */
+  const pasteAndAnalyze = async () => {
+    const text = (await readClipboard()).trim()
+    if (looksLikeUrl(text)) {
+      setUrl(text)
+      analyze(text)
+    } else {
+      toast('No hay ningún enlace en el portapapeles', {
+        description: 'Copia el enlace del video y vuelve a intentarlo.',
+      })
+    }
+  }
+
+  const urlBar = (
+    <UrlBar value={url} onChange={setUrl} onSubmit={analyze} loading={loading} compact={!empty} />
+  )
+
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-8 py-8">
-      {empty && (
-        <div className="flex flex-col items-center gap-4 pt-10 pb-4 text-center">
-          <div className="flex size-16 items-center justify-center rounded-3xl bg-gradient-to-br from-red-500 via-red-600 to-red-900 text-white shadow-[0_0_50px_rgba(231,0,11,0.55)]">
-            <Download className="size-8" />
-          </div>
-          <h1 className="text-5xl font-bold leading-[1.05] tracking-tight">
-            Descarga cualquier video. <span className="text-shimmer">Sin límites.</span>
-          </h1>
-          <p className="max-w-xl text-lg text-white/65">
-            Pega un enlace y elige la calidad. Se descarga a máxima velocidad usando fragmentos en
-            paralelo, sin anuncios y sin límites de tamaño.
-          </p>
-        </div>
-      )}
-
-      <UrlBar value={url} onChange={setUrl} onSubmit={analyze} loading={loading} compact={!empty} />
-
-      {empty && (
+    <div
+      className={`mx-auto flex w-full flex-col gap-6 px-8 ${empty ? 'max-w-7xl pb-16 lg:px-12' : 'max-w-5xl py-8'}`}
+    >
+      {empty ? (
         <>
-          <div className="flex flex-wrap justify-center gap-2">
-            {SITES.map((s) => (
-              <span
-                key={s}
-                className="rounded-full border border-border px-3 py-1 text-xs text-muted"
-              >
-                {s}
-              </span>
-            ))}
-            <span className="rounded-full border border-border px-3 py-1 text-xs text-muted">
-              +1.800 sitios
-            </span>
-          </div>
-          <div className="mt-4 grid grid-cols-3 gap-4">
-            <Feature icon={<Zap className="size-5" />} title="Velocidad máxima">
-              Descarga hasta 32 fragmentos en paralelo y evita el throttling.
-            </Feature>
-            <Feature icon={<Sparkles className="size-5" />} title="Hasta 8K y HDR">
-              Elige resolución, FPS y formato viendo el peso exacto del archivo.
-            </Feature>
-            <Feature icon={<Music className="size-5" />} title="Solo audio">
-              Extrae MP3, M4A, Opus, FLAC o WAV con portada y metadatos.
-            </Feature>
-          </div>
+          <HomeHero
+            className="min-h-[40vh] pt-16"
+            badge="Hasta 8K · HDR · sin anuncios · +1.800 sitios"
+            title={
+              <>
+                Descarga cualquier video.
+                <br />
+                <span className="text-shimmer">Sin límites.</span>
+              </>
+            }
+            desc="Pega un enlace y elige la calidad. Se descarga a máxima velocidad usando fragmentos en paralelo, sin anuncios y sin límites de tamaño."
+          >
+            <div className="flex max-w-3xl flex-col gap-4">
+              {urlBar}
+              <div className="flex flex-wrap gap-2">
+                {[...SITES, '+1.800 sitios'].map((s) => (
+                  <span
+                    key={s}
+                    className="rounded-full border border-white/15 bg-black/35 px-3 py-1 text-xs text-white/70 backdrop-blur"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </HomeHero>
+          <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <ActionCard
+              delay={0.45}
+              icon={<ClipboardPaste className="size-6" />}
+              accent="from-red-500 to-red-700"
+              title="Pegar y analizar"
+              desc="Usa el enlace que copiaste: elige resolución, FPS y formato viendo el peso exacto."
+              cta="Pegar enlace"
+              onPress={() => void pasteAndAnalyze()}
+            />
+            <ActionCard
+              delay={0.52}
+              icon={<ListUl className="size-6" />}
+              accent="from-red-600 to-rose-900"
+              title="Cola de descargas"
+              desc="Sigue el progreso, pausa o reintenta. Hasta 32 fragmentos en paralelo por archivo."
+              cta="Ver cola"
+              onPress={onShowDownloads}
+            />
+            <ActionCard
+              delay={0.59}
+              icon={<Sliders className="size-6" />}
+              accent="from-rose-600 to-red-950"
+              title="Ajustes"
+              desc="Carpeta de destino, calidad y formato de audio predeterminados, y sesión del navegador."
+              cta="Abrir ajustes"
+              onPress={() => onShowSettings?.()}
+            />
+          </section>
+          <HomeFooter right="yt-dlp · ffmpeg" />
         </>
+      ) : (
+        urlBar
       )}
 
       {loading && <LoadingCard />}
@@ -623,26 +663,6 @@ function Toggle({
         <span className="text-sm">{label}</span>
       </Switch.Content>
     </Switch>
-  )
-}
-
-function Feature({
-  icon,
-  title,
-  children,
-}: {
-  icon: React.ReactNode
-  title: string
-  children: React.ReactNode
-}) {
-  return (
-    <Card className="gap-2 p-5">
-      <div className="flex size-10 items-center justify-center rounded-xl bg-accent-soft text-accent">
-        {icon}
-      </div>
-      <h3 className="font-semibold">{title}</h3>
-      <p className="text-sm text-muted">{children}</p>
-    </Card>
   )
 }
 

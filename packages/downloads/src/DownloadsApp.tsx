@@ -1,4 +1,4 @@
-import { AppHeader, PageBackdrop } from '@creator-studio/ui'
+import { AppHeader, HomeBackdrop, PageBackdrop } from '@creator-studio/ui'
 import {
   ArrowDownToLine as Download,
   ListOl as ListOrdered,
@@ -24,7 +24,8 @@ function Downloads() {
 
   return (
     <div data-section="downloads" className="relative flex h-full flex-col text-white">
-      <PageBackdrop />
+      {/* La vista de nueva descarga usa el fondo 3D de las pantallas de inicio. */}
+      {view === 'download' ? <HomeBackdrop motif="download" /> : <PageBackdrop />}
       <AppHeader section="Descargas" title="Descargador">
         <Tabs selectedKey={view} onSelectionChange={(k) => setView(k as View)} className="ml-6">
           <Tabs.ListContainer>
@@ -54,7 +55,10 @@ function Downloads() {
       <main ref={mainRef} className="relative min-h-0 flex-1 overflow-y-auto">
         {/* Keep the download view mounted so the analysed video survives tab switches. */}
         <div className={view === 'download' ? 'contents' : 'hidden'}>
-          <DownloadView onShowDownloads={() => setView('downloads')} />
+          <DownloadView
+            onShowDownloads={() => setView('downloads')}
+            onShowSettings={() => setView('settings')}
+          />
         </div>
         {view === 'downloads' && <DownloadsView onNew={() => setView('download')} />}
         {view === 'settings' && <SettingsView />}

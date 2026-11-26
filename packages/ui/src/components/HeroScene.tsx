@@ -1,10 +1,15 @@
-import { useSectionActive } from '@creator-studio/ui'
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import { useSectionActive } from '../section'
+
+/** Motivo de los marcos flotantes: fotogramas, fotos o descargas. */
+export type HeroMotif = 'video' | 'image' | 'download'
 
 interface Props {
   /** URLs de imágenes (miniaturas de proyectos) que se usan como textura de los marcos. */
-  images: string[]
+  images?: string[]
+  /** Qué dibujan los marcos: fotogramas (Videos), fotos (Imágenes) o descargas (Descargas). */
+  motif?: HeroMotif
   className?: string
 }
 
@@ -17,24 +22,107 @@ const PALETTE = [
   ['#e7000b', '#ff6467'],
 ]
 
-/** Textura de "fotograma" generada: degradado + perforaciones de película + botón de play. */
-function frameTexture(i: number): THREE.Texture {
+/** Tamaño del marco (unidades de la escena) y del lienzo de su textura según el motivo. */
+const FRAME: Record<HeroMotif, { w: number; h: number; cw: number; ch: number }> = {
+  video: { w: 3.2, h: 1.8, cw: 512, ch: 288 },
+  image: { w: 2.6, h: 2.0, cw: 416, ch: 320 },
+  download: { w: 3.2, h: 1.8, cw: 512, ch: 288 },
+}
+
+/** Lienzo con el degradado de la paleta y un brillo, base de todas las texturas. */
+function baseCanvas(i: number, motif: HeroMotif) {
+  const { cw, ch } = FRAME[motif]
   const c = document.createElement('canvas')
-  c.width = 512
-  c.height = 288
+  c.width = cw
+  c.height = ch
   const g = c.getContext('2d')!
   const [a, b] = PALETTE[i % PALETTE.length]
-  const grad = g.createLinearGradient(0, 0, 512, 288)
+  const grad = g.createLinearGradient(0, 0, cw, ch)
   grad.addColorStop(0, a)
   grad.addColorStop(1, b)
   g.fillStyle = grad
-  g.fillRect(0, 0, 512, 288)
-  // brillo
-  const glow = g.createRadialGradient(150, 60, 10, 150, 60, 320)
+  g.fillRect(0, 0, cw, ch)
+  const glow = g.createRadialGradient(cw * 0.3, ch * 0.2, 10, cw * 0.3, ch * 0.2, cw * 0.62)
   glow.addColorStop(0, 'rgba(255,255,255,0.35)')
   glow.addColorStop(1, 'rgba(255,255,255,0)')
   g.fillStyle = glow
-  g.fillRect(0, 0, 512, 288)
+  g.fillRect(0, 0, cw, ch)
+  return { c, g, cw, ch }
+}
+
+function toTexture(c: HTMLCanvasElement): THREE.Texture {
+  const t = new THREE.CanvasTexture(c)
+  t.colorSpace = THREE.SRGBColorSpace
+  return t
+}
+
+function frameTexture(i: number, motif: HeroMotif): THREE.Texture {
+  if (motif === 'image') return photoTexture(i)
+  if (motif === 'download') return downloadTexture(i)
+  return videoTexture(i)
+}
+
+/** Foto generada: cielo, sol y montañas dentro de un marco claro. */
+function photoTexture(i: number): THREE.Texture {
+  const { c, g, cw, ch } = baseCanvas(i, 'image')
+  // sol
+  g.fillStyle = 'rgba(255,255,255,0.8)'
+  g.beginPath()
+  g.arc(cw * 0.72, ch * 0.3, 28, 0, Math.PI * 2)
+  g.fill()
+  // montañas
+  g.fillStyle = 'rgba(0,0,0,0.35)'
+  g.beginPath()
+  g.moveTo(0, ch)
+  g.lineTo(cw * 0.3, ch * 0.45)
+  g.lineTo(cw * 0.55, ch * 0.78)
+  g.lineTo(cw * 0.72, ch * 0.58)
+  g.lineTo(cw, ch)
+  g.closePath()
+  g.fill()
+  g.fillStyle = 'rgba(0,0,0,0.5)'
+  g.beginPath()
+  g.moveTo(0, ch)
+  g.lineTo(cw * 0.18, ch * 0.7)
+  g.lineTo(cw * 0.42, ch)
+  g.closePath()
+  g.fill()
+  // marco
+  g.strokeStyle = 'rgba(255,255,255,0.85)'
+  g.lineWidth = 18
+  g.strokeRect(9, 9, cw - 18, ch - 18)
+  return toTexture(c)
+}
+
+/** Tarjeta de descarga generada: flecha hacia abajo y barra de progreso. */
+function downloadTexture(i: number): THREE.Texture {
+  const { c, g, cw, ch } = baseCanvas(i, 'download')
+  // flecha
+  g.strokeStyle = 'rgba(255,255,255,0.88)'
+  g.lineWidth = 16
+  g.lineCap = 'round'
+  g.lineJoin = 'round'
+  g.beginPath()
+  g.moveTo(cw / 2, ch * 0.18)
+  g.lineTo(cw / 2, ch * 0.6)
+  g.moveTo(cw / 2 - 44, ch * 0.46)
+  g.lineTo(cw / 2, ch * 0.6)
+  g.lineTo(cw / 2 + 44, ch * 0.46)
+  g.stroke()
+  // barra de progreso
+  const x = 56
+  const y = ch * 0.78
+  const w = cw - 112
+  g.fillStyle = 'rgba(0,0,0,0.4)'
+  g.fillRect(x, y, w, 14)
+  g.fillStyle = 'rgba(255,255,255,0.85)'
+  g.fillRect(x, y, w * (0.25 + ((i * 29) % 70) / 100), 14)
+  return toTexture(c)
+}
+
+/** Textura de "fotograma" generada: degradado + perforaciones de película + botón de play. */
+function videoTexture(i: number): THREE.Texture {
+  const { c, g } = baseCanvas(i, 'video')
   // perforaciones
   g.fillStyle = 'rgba(0,0,0,0.45)'
   g.fillRect(0, 0, 512, 26)
@@ -52,9 +140,7 @@ function frameTexture(i: number): THREE.Texture {
   g.lineTo(286, 144)
   g.closePath()
   g.fill()
-  const t = new THREE.CanvasTexture(c)
-  t.colorSpace = THREE.SRGBColorSpace
-  return t
+  return toTexture(c)
 }
 
 /** Textura circular suave para las partículas. */
@@ -117,7 +203,8 @@ const NEBULA_FRAG = /* glsl */ `
   }
 `
 
-export default function HeroScene({ images, className }: Props) {
+/** Fondo 3D animado de las pantallas de inicio: nebulosa roja, marcos flotantes y partículas. */
+export function HeroScene({ images = [], motif = 'video', className }: Props) {
   // Con la sección oculta no se dibuja nada (ahorra GPU).
   const active = useSectionActive()
   const activeRef = useRef(active)
@@ -128,6 +215,7 @@ export default function HeroScene({ images, className }: Props) {
   useEffect(() => {
     const mount = mountRef.current
     if (!mount) return
+    const urls = imagesKey ? imagesKey.split('|') : []
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     let renderer: THREE.WebGLRenderer
@@ -173,7 +261,7 @@ export default function HeroScene({ images, className }: Props) {
     const group = new THREE.Group()
     scene.add(group)
     const COUNT = 22
-    const frameGeo = new THREE.PlaneGeometry(3.2, 1.8)
+    const frameGeo = new THREE.PlaneGeometry(FRAME[motif].w, FRAME[motif].h)
     const borderGeo = new THREE.EdgesGeometry(frameGeo)
     disposables.push(frameGeo, borderGeo)
     const loader = new THREE.TextureLoader()
@@ -181,7 +269,7 @@ export default function HeroScene({ images, className }: Props) {
     const frames: { mesh: THREE.Mesh; base: THREE.Vector3; phase: number; speed: number }[] = []
 
     for (let i = 0; i < COUNT; i++) {
-      const tex = frameTexture(i)
+      const tex = frameTexture(i, motif)
       disposables.push(tex)
       const mat = new THREE.MeshBasicMaterial({
         map: tex,
@@ -191,8 +279,8 @@ export default function HeroScene({ images, className }: Props) {
       })
       disposables.push(mat)
       // Algunos marcos muestran las miniaturas reales de los proyectos
-      if (images.length && i % 3 === 0) {
-        const url = images[(i / 3) % images.length]
+      if (urls.length && i % 3 === 0) {
+        const url = urls[(i / 3) % urls.length]
         loader.load(
           url,
           (t) => {
@@ -309,6 +397,15 @@ export default function HeroScene({ images, className }: Props) {
         const m = f.mesh.material as THREE.MeshBasicMaterial
         if (m.opacity < 0.82) m.opacity = Math.min(0.82, m.opacity + 0.008) // aparición gradual
       }
+      if (motif === 'download') {
+        // las partículas caen como una lluvia de datos
+        for (let i = 0; i < P; i++) {
+          const y = i * 3 + 1
+          pos[y] -= 0.012 + (i % 5) * 0.004
+          if (pos[y] < -12) pos[y] += 24
+        }
+        pGeo.attributes.position.needsUpdate = true
+      }
       points.rotation.y = t * 0.012
       points.position.x = mouse.x * 0.6
       points.position.y = mouse.y * 0.4
@@ -350,8 +447,7 @@ export default function HeroScene({ images, className }: Props) {
       renderer.dispose()
       renderer.domElement.remove()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imagesKey])
+  }, [imagesKey, motif])
 
   return (
     <div
